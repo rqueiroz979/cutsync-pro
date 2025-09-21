@@ -35,10 +35,15 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost">
+            <Button 
+              variant="ghost"
+              onClick={() => window.location.href = "/auth"}
+            >
               Entrar
             </Button>
-            <Button>
+            <Button
+              onClick={() => window.location.href = "/auth"}
+            >
               Teste Grátis
             </Button>
           </div>
@@ -81,10 +86,17 @@ export function Navbar() {
                 Contato
               </a>
               <div className="px-3 py-2 space-y-2">
-                <Button variant="ghost" className="w-full justify-start">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start"
+                  onClick={() => window.location.href = "/auth"}
+                >
                   Entrar
                 </Button>
-                <Button className="w-full">
+                <Button 
+                  className="w-full"
+                  onClick={() => window.location.href = "/auth"}
+                >
                   Teste Grátis
                 </Button>
               </div>

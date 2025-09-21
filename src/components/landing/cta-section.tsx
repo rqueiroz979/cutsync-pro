@@ -16,6 +16,7 @@ export function CTASection() {
           <Button 
             size="lg" 
             className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-4 text-lg"
+            onClick={() => window.location.href = "/auth"}
           >
             Começar Teste Grátis Agora
           </Button>
