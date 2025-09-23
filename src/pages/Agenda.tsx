@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Calendar as CalendarIcon } from "lucide-react";
+import { ArrowLeft, Calendar as CalendarIcon, MessageCircle } from "lucide-react";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { generateConfirmationMessage, generateReminderMessage, formatPhoneNumber } from "@/lib/whatsapp-utils";
 
 interface Appointment {
   id: string;
@@ -170,6 +172,39 @@ const Agenda = () => {
                       <p className="text-sm text-muted-foreground">Profissional</p>
                       <p className="font-medium">{appointment.professionals?.name}</p>
                     </div>
+                  </div>
+                  
+                  <div className="flex gap-2 mt-3">
+                    <WhatsAppButton
+                      phoneNumber={formatPhoneNumber(appointment.client_phone)}
+                      message={generateConfirmationMessage({
+                        clientName: appointment.client_name,
+                        serviceName: appointment.services?.name || 'Serviço',
+                        professionalName: appointment.professionals?.name || 'Profissional',
+                        date: appointment.appointment_date,
+                        time: appointment.appointment_time,
+                      })}
+                      variant="outline"
+                      className="text-xs h-8"
+                    >
+                      <MessageCircle className="h-3 w-3 mr-1" />
+                      Confirmar
+                    </WhatsAppButton>
+                    
+                    <WhatsAppButton
+                      phoneNumber={formatPhoneNumber(appointment.client_phone)}
+                      message={generateReminderMessage({
+                        clientName: appointment.client_name,
+                        serviceName: appointment.services?.name || 'Serviço',
+                        date: appointment.appointment_date,
+                        time: appointment.appointment_time,
+                      })}
+                      variant="outline"
+                      className="text-xs h-8"
+                    >
+                      <MessageCircle className="h-3 w-3 mr-1" />
+                      Lembrete
+                    </WhatsAppButton>
                   </div>
                   
                   {appointment.status === "scheduled" && (

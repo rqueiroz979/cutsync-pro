@@ -6,7 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Scissors, Clock, User, Phone } from "lucide-react";
+import { Scissors, Clock, User, Phone, MessageCircle } from "lucide-react";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { generateBookingMessage } from "@/lib/whatsapp-utils";
 
 interface Service {
   id: string;
@@ -132,6 +134,20 @@ const BookingPublic = () => {
     setCurrentStep(5);
   };
 
+  const generateWhatsAppMessage = () => {
+    if (!selectedService || !selectedProfessional) return "";
+    
+    return generateBookingMessage({
+      clientName: clientData.name,
+      serviceName: selectedService.name,
+      professionalName: selectedProfessional.name,
+      date: selectedDate,
+      time: selectedTime,
+      price: selectedService.price,
+      phone: clientData.phone,
+    });
+  };
+
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -153,16 +169,11 @@ const BookingPublic = () => {
 
       toast({
         title: "Agendamento confirmado!",
-        description: "Seu agendamento foi realizado com sucesso. Você receberá uma confirmação no WhatsApp.",
+        description: "Seu agendamento foi realizado com sucesso.",
       });
 
-      // Reset form
-      setCurrentStep(1);
-      setSelectedService(null);
-      setSelectedProfessional(null);
-      setSelectedDate("");
-      setSelectedTime("");
-      setClientData({ name: "", phone: "" });
+      // Show WhatsApp options
+      setCurrentStep(6);
     } catch (error) {
       console.error("Error creating appointment:", error);
       toast({
@@ -173,6 +184,27 @@ const BookingPublic = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleWhatsAppShare = () => {
+    // Reset form after sharing
+    setTimeout(() => {
+      setCurrentStep(1);
+      setSelectedService(null);
+      setSelectedProfessional(null);
+      setSelectedDate("");
+      setSelectedTime("");
+      setClientData({ name: "", phone: "" });
+    }, 2000);
+  };
+
+  const handleNewBooking = () => {
+    setCurrentStep(1);
+    setSelectedService(null);
+    setSelectedProfessional(null);
+    setSelectedDate("");
+    setSelectedTime("");
+    setClientData({ name: "", phone: "" });
   };
 
   const getMinDate = () => {
@@ -355,6 +387,55 @@ const BookingPublic = () => {
                   {loading ? "Confirmando..." : "Confirmar Agendamento"}
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Step 6: WhatsApp Confirmation */}
+        {currentStep === 6 && (
+          <Card>
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-4 w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
+                <MessageCircle className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-green-600">Agendamento Confirmado!</CardTitle>
+              <CardDescription>
+                Seu horário foi reservado com sucesso
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium mb-2">Detalhes do Agendamento</h3>
+                <p><strong>Cliente:</strong> {clientData.name}</p>
+                <p><strong>Serviço:</strong> {selectedService?.name}</p>
+                <p><strong>Profissional:</strong> {selectedProfessional?.name}</p>
+                <p><strong>Data:</strong> {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p>
+                <p><strong>Horário:</strong> {selectedTime}</p>
+                <p><strong>Valor:</strong> R$ {selectedService?.price.toFixed(2)}</p>
+              </div>
+
+              <div className="space-y-3">
+                <div onClick={handleWhatsAppShare}>
+                  <WhatsAppButton 
+                    message={generateWhatsAppMessage()}
+                    className="w-full"
+                  >
+                    Compartilhar no WhatsApp
+                  </WhatsAppButton>
+                </div>
+                
+                <Button 
+                  variant="outline"
+                  onClick={handleNewBooking}
+                  className="w-full"
+                >
+                  Fazer Novo Agendamento
+                </Button>
+              </div>
+
+              <div className="text-center text-sm text-muted-foreground">
+                <p>💡 Dica: Compartilhe no WhatsApp para ter uma cópia do agendamento e facilitar o contato com a barbearia!</p>
+              </div>
             </CardContent>
           </Card>
         )}

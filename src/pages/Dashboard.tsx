@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Calendar, DollarSign, Users, Clock, LogOut } from "lucide-react";
+import { Calendar, DollarSign, Users, Clock, LogOut, Scissors } from "lucide-react";
+import { ShareBookingLink } from "@/components/booking/share-booking-link";
 
 interface DashboardStats {
   todayRevenue: number;
@@ -151,11 +152,12 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Próximos Agendamentos</CardTitle>
-              <CardDescription>Seus próximos clientes</CardDescription>
-            </CardHeader>
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Próximos Agendamentos</CardTitle>
+                <CardDescription>Seus próximos clientes</CardDescription>
+              </CardHeader>
             <CardContent>
               {stats.nextAppointments.length === 0 ? (
                 <p className="text-muted-foreground">Nenhum agendamento próximo</p>
@@ -182,7 +184,15 @@ const Dashboard = () => {
                 </div>
               )}
             </CardContent>
-          </Card>
+            </Card>
+
+            {user && (
+              <ShareBookingLink 
+                barbershopId={user.id} 
+                barbershopName={profile?.barbershop_name}
+              />
+            )}
+          </div>
 
           <Card>
             <CardHeader>
@@ -202,7 +212,7 @@ const Dashboard = () => {
                 variant="outline" 
                 className="w-full justify-start"
               >
-                <Users className="h-4 w-4 mr-2" />
+                <Scissors className="h-4 w-4 mr-2" />
                 Gerenciar Serviços
               </Button>
               <Button 
