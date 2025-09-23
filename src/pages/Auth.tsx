@@ -15,6 +15,8 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [barbershopName, setBarbershopName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [showResetForm, setShowResetForm] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -80,6 +82,32 @@ const Auth = () => {
     setLoading(false);
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+
+    if (error) {
+      toast({
+        title: "Erro na recuperação",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Email enviado!",
+        description: "Verifique seu email para redefinir a senha.",
+      });
+      setShowResetForm(false);
+      setResetEmail("");
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -123,7 +151,47 @@ const Auth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Entrando..." : "Entrar"}
                 </Button>
+                <div className="text-center mt-4">
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="text-sm text-muted-foreground"
+                    onClick={() => setShowResetForm(true)}
+                  >
+                    Esqueceu a senha?
+                  </Button>
+                </div>
               </form>
+              {showResetForm && (
+                <form onSubmit={handleResetPassword} className="space-y-4 mt-4 pt-4 border-t">
+                  <div className="space-y-2">
+                    <Label htmlFor="resetEmail">Email para recuperação</Label>
+                    <Input
+                      id="resetEmail"
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => {
+                        setShowResetForm(false);
+                        setResetEmail("");
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit" className="flex-1" disabled={loading}>
+                      {loading ? "Enviando..." : "Enviar"}
+                    </Button>
+                  </div>
+                </form>
+              )}
             </TabsContent>
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
