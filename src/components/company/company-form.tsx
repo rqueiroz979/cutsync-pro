@@ -41,9 +41,9 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
           barbershop_name: profile.barbershop_name || "",
           full_name: profile.full_name || "",
           phone: profile.phone || "",
-          address: profile.address || "",
-          email: profile.email || "",
-          description: profile.description || "",
+          address: (profile as any).address || "",
+          email: (profile as any).email || "",
+          description: (profile as any).description || "",
         });
       }
     } catch (error) {
@@ -65,7 +65,7 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
           address: formData.address,
           email: formData.email,
           description: formData.description,
-        })
+        } as any)
         .eq("user_id", userId);
 
       if (error) throw error;

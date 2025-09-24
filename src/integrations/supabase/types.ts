@@ -144,8 +144,11 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           barbershop_name: string
           created_at: string
+          description: string | null
+          email: string | null
           full_name: string
           id: string
           phone: string | null
@@ -153,8 +156,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          address?: string | null
           barbershop_name: string
           created_at?: string
+          description?: string | null
+          email?: string | null
           full_name: string
           id?: string
           phone?: string | null
@@ -162,8 +168,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          address?: string | null
           barbershop_name?: string
           created_at?: string
+          description?: string | null
+          email?: string | null
           full_name?: string
           id?: string
           phone?: string | null
