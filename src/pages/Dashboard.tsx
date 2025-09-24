@@ -244,6 +244,14 @@ const Dashboard = () => {
                     className="w-full justify-start"
                   >
                     <DollarSign className="h-4 w-4 mr-2" />
+                    Pagamentos
+                  </Button>
+                  <Button 
+                    onClick={() => navigate("/reports")} 
+                    variant="outline" 
+                    className="w-full justify-start"
+                  >
+                    <BarChart3 className="h-4 w-4 mr-2" />
                     Relatório Financeiro
                   </Button>
                 </CardContent>

@@ -10,7 +10,9 @@ import Services from "./pages/Services";
 import Professionals from "./pages/Professionals";
 import Agenda from "./pages/Agenda";
 import Payments from "./pages/Payments";
+import Reports from "./pages/Reports";
 import BookingPublic from "./pages/BookingPublic";
+import PublicBooking from "./pages/PublicBooking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,7 +31,9 @@ const App = () => (
           <Route path="/professionals" element={<Professionals />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/payments" element={<Payments />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/book/:barbershopId" element={<BookingPublic />} />
+          <Route path="/agendamento" element={<PublicBooking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

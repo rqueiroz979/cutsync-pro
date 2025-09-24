@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Copy, Share2, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ShareBookingLinkProps {
   barbershopId: string;
@@ -13,9 +14,28 @@ interface ShareBookingLinkProps {
 
 export const ShareBookingLink = ({ barbershopId, barbershopName = "Sua Barbearia" }: ShareBookingLinkProps) => {
   const [copied, setCopied] = useState(false);
+  const [barbershopData, setBarbershopData] = useState<any>(null);
   const { toast } = useToast();
   
   const bookingUrl = `${window.location.origin}/book/${barbershopId}`;
+
+  useEffect(() => {
+    loadBarbershopData();
+  }, [barbershopId]);
+
+  const loadBarbershopData = async () => {
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("whatsapp")
+        .eq("user_id", barbershopId)
+        .single();
+      
+      setBarbershopData(profile);
+    } catch (error) {
+      console.error("Error loading barbershop data:", error);
+    }
+  };
   
   const handleCopyLink = async () => {
     try {
@@ -80,6 +100,17 @@ ${barbershopName} agora tem agendamento online!
             <MessageCircle className="h-4 w-4 mr-2" />
             Compartilhar no WhatsApp
           </WhatsAppButton>
+          
+          {barbershopData?.whatsapp && (
+            <WhatsAppButton
+              phoneNumber={barbershopData.whatsapp}
+              message={`Olá, agende seu horário na ${barbershopName} neste link: ${bookingUrl}`}
+              className="flex-1"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Enviar para WhatsApp da Barbearia
+            </WhatsAppButton>
+          )}
         </div>
         
         <div className="text-sm text-muted-foreground">

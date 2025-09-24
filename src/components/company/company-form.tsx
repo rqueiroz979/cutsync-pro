@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Building2, Phone, MapPin, Mail } from "lucide-react";
+import { Building2, Phone, MapPin, Mail, MessageCircle } from "lucide-react";
 
 interface CompanyFormProps {
   userId: string;
@@ -17,6 +17,7 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
     barbershop_name: "",
     full_name: "",
     phone: "",
+    whatsapp: "",
     address: "",
     email: "",
     description: "",
@@ -41,6 +42,7 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
           barbershop_name: profile.barbershop_name || "",
           full_name: profile.full_name || "",
           phone: profile.phone || "",
+          whatsapp: (profile as any).whatsapp || "",
           address: (profile as any).address || "",
           email: (profile as any).email || "",
           description: (profile as any).description || "",
@@ -62,6 +64,7 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
           barbershop_name: formData.barbershop_name,
           full_name: formData.full_name,
           phone: formData.phone,
+          whatsapp: formData.whatsapp,
           address: formData.address,
           email: formData.email,
           description: formData.description,
@@ -136,7 +139,7 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
             <div className="space-y-2">
               <Label htmlFor="phone" className="flex items-center gap-1">
                 <Phone className="h-4 w-4" />
-                Telefone/WhatsApp
+                Telefone
               </Label>
               <Input
                 id="phone"
@@ -148,6 +151,23 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp" className="flex items-center gap-1">
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp da Barbearia
+              </Label>
+              <Input
+                id="whatsapp"
+                name="whatsapp"
+                type="tel"
+                value={formData.whatsapp}
+                onChange={handleChange}
+                placeholder="(11) 99999-9999"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-1">
                 <Mail className="h-4 w-4" />
