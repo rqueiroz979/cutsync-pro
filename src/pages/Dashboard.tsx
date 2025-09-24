@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Calendar, DollarSign, Users, Clock, LogOut, Scissors } from "lucide-react";
+import { Calendar, DollarSign, Users, Clock, LogOut, Scissors, Building2, BarChart3 } from "lucide-react";
 import { ShareBookingLink } from "@/components/booking/share-booking-link";
+import CompanyForm from "@/components/company/company-form";
 
 interface DashboardStats {
   todayRevenue: number;
@@ -117,123 +119,142 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Faturamento Hoje</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                R$ {stats.todayRevenue.toFixed(2)}
-              </div>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Visão Geral
+            </TabsTrigger>
+            <TabsTrigger value="company" className="flex items-center gap-2">
+              <Building2 className="h-4 w-4" />
+              Dados da Empresa
+            </TabsTrigger>
+          </TabsList>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Agendamentos Hoje</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.todayAppointments}</div>
-            </CardContent>
-          </Card>
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Faturamento Hoje</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    R$ {stats.todayRevenue.toFixed(2)}
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Próximos</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.nextAppointments.length}</div>
-            </CardContent>
-          </Card>
-        </div>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Agendamentos Hoje</CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.todayAppointments}</div>
+                </CardContent>
+              </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Próximos Agendamentos</CardTitle>
-                <CardDescription>Seus próximos clientes</CardDescription>
-              </CardHeader>
-            <CardContent>
-              {stats.nextAppointments.length === 0 ? (
-                <p className="text-muted-foreground">Nenhum agendamento próximo</p>
-              ) : (
-                <div className="space-y-4">
-                  {stats.nextAppointments.map((appointment) => (
-                    <div key={appointment.id} className="flex justify-between items-center p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">{appointment.client_name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {appointment.services?.name} - {appointment.professionals?.name}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">
-                          {new Date(appointment.appointment_date).toLocaleDateString()}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {appointment.appointment_time}
-                        </p>
-                      </div>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Próximos</CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.nextAppointments.length}</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Próximos Agendamentos</CardTitle>
+                    <CardDescription>Seus próximos clientes</CardDescription>
+                  </CardHeader>
+                <CardContent>
+                  {stats.nextAppointments.length === 0 ? (
+                    <p className="text-muted-foreground">Nenhum agendamento próximo</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {stats.nextAppointments.map((appointment) => (
+                        <div key={appointment.id} className="flex justify-between items-center p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium">{appointment.client_name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {appointment.services?.name} - {appointment.professionals?.name}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">
+                              {new Date(appointment.appointment_date).toLocaleDateString()}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {appointment.appointment_time}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-            </Card>
+                  )}
+                </CardContent>
+                </Card>
 
-            {user && (
-              <ShareBookingLink 
-                barbershopId={user.id} 
-                barbershopName={profile?.barbershop_name}
-              />
-            )}
-          </div>
+                {user && (
+                  <ShareBookingLink 
+                    barbershopId={user.id} 
+                    barbershopName={profile?.barbershop_name}
+                  />
+                )}
+              </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Ações Rápidas</CardTitle>
-              <CardDescription>Gerenciar sua barbearia</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button 
-                onClick={() => navigate("/agenda")} 
-                className="w-full justify-start"
-              >
-                <Calendar className="h-4 w-4 mr-2" />
-                Ver Agenda
-              </Button>
-              <Button 
-                onClick={() => navigate("/services")} 
-                variant="outline" 
-                className="w-full justify-start"
-              >
-                <Scissors className="h-4 w-4 mr-2" />
-                Gerenciar Serviços
-              </Button>
-              <Button 
-                onClick={() => navigate("/professionals")} 
-                variant="outline" 
-                className="w-full justify-start"
-              >
-                <Users className="h-4 w-4 mr-2" />
-                Gerenciar Profissionais
-              </Button>
-              <Button 
-                onClick={() => navigate("/payments")} 
-                variant="outline" 
-                className="w-full justify-start"
-              >
-                <DollarSign className="h-4 w-4 mr-2" />
-                Relatório Financeiro
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Ações Rápidas</CardTitle>
+                  <CardDescription>Gerenciar sua barbearia</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Button 
+                    onClick={() => navigate("/agenda")} 
+                    className="w-full justify-start"
+                  >
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Ver Agenda
+                  </Button>
+                  <Button 
+                    onClick={() => navigate("/services")} 
+                    variant="outline" 
+                    className="w-full justify-start"
+                  >
+                    <Scissors className="h-4 w-4 mr-2" />
+                    Gerenciar Serviços
+                  </Button>
+                  <Button 
+                    onClick={() => navigate("/professionals")} 
+                    variant="outline" 
+                    className="w-full justify-start"
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    Gerenciar Profissionais
+                  </Button>
+                  <Button 
+                    onClick={() => navigate("/payments")} 
+                    variant="outline" 
+                    className="w-full justify-start"
+                  >
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    Relatório Financeiro
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="company">
+            {user && <CompanyForm userId={user.id} />}
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
