@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Scissors, Clock, User, Phone, MessageCircle, Calendar } from "lucide-react";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { WhatsAppSender } from "@/components/whatsapp/whatsapp-sender";
 import { generateConfirmationMessage } from "@/lib/whatsapp-utils";
 
 interface Service {
@@ -169,7 +170,7 @@ const PublicBooking = () => {
         description: "Seu agendamento foi realizado com sucesso.",
       });
 
-      setCurrentStep(6);
+      setCurrentStep(7);
     } catch (error) {
       console.error("Error creating appointment:", error);
       toast({
@@ -450,12 +451,20 @@ const PublicBooking = () => {
               </div>
 
               <div className="space-y-3">
+                <WhatsAppSender 
+                  phoneNumber={clientData.phone}
+                  message={generateWhatsAppMessage()}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white"
+                >
+                  Enviar confirmação no WhatsApp
+                </WhatsAppSender>
+                
                 <WhatsAppButton 
                   phoneNumber={selectedBarbershop?.whatsapp}
                   message={generateWhatsAppMessage()}
                   className="w-full"
                 >
-                  Enviar confirmação para a barbearia
+                  Compartilhar no WhatsApp da barbearia
                 </WhatsAppButton>
                 
                 <Button 

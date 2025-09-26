@@ -36,6 +36,28 @@ export const ShareBookingLink = ({ barbershopId, barbershopName = "Sua Barbearia
       console.error("Error loading barbershop data:", error);
     }
   };
+
+  const sendWhatsAppMessage = async (phoneNumber: string, message: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-whatsapp', {
+        body: { to: phoneNumber, message }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Mensagem enviada!",
+        description: "A mensagem foi enviada para o WhatsApp com sucesso",
+      });
+    } catch (error: any) {
+      console.error("Error sending WhatsApp message:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível enviar a mensagem. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
   
   const handleCopyLink = async () => {
     try {
@@ -102,14 +124,16 @@ ${barbershopName} agora tem agendamento online!
           </WhatsAppButton>
           
           {barbershopData?.whatsapp && (
-            <WhatsAppButton
-              phoneNumber={barbershopData.whatsapp}
-              message={`Olá, agende seu horário na ${barbershopName} neste link: ${bookingUrl}`}
-              className="flex-1"
+            <Button
+              onClick={() => sendWhatsAppMessage(
+                barbershopData.whatsapp, 
+                `Olá, agende seu horário na ${barbershopName} neste link: ${bookingUrl}`
+              )}
+              className="flex-1 bg-green-500 hover:bg-green-600 text-white"
             >
               <MessageCircle className="h-4 w-4 mr-2" />
-              Enviar para WhatsApp da Barbearia
-            </WhatsAppButton>
+              Enviar via API WhatsApp
+            </Button>
           )}
         </div>
         
