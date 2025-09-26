@@ -36,25 +36,32 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Tudo que sua Barbearia Precisa
+    <section className="py-24 bg-gradient-to-b from-background via-secondary/10 to-background relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center bg-accent/10 border border-accent/20 rounded-full px-4 py-2 mb-6">
+            <span className="text-accent font-medium text-sm">✨ Funcionalidades Completas</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+            Tudo que sua Barbearia <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Precisa</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Sistema completo que simplifica sua gestão e melhora a experiência dos seus clientes
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Sistema completo que simplifica sua gestão, automatiza processos e melhora a experiência dos seus clientes
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-            />
+            <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+              <FeatureCard
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+              />
+            </div>
           ))}
         </div>
       </div>
