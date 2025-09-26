@@ -10,6 +10,7 @@ import { Scissors, Clock, User, Phone, MessageCircle, Calendar } from "lucide-re
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { WhatsAppSender } from "@/components/whatsapp/whatsapp-sender";
 import { generateConfirmationMessage } from "@/lib/whatsapp-utils";
+import { CalendarBooking } from "@/components/booking/calendar-booking";
 
 interface Service {
   id: string;
@@ -40,7 +41,7 @@ const PublicBooking = () => {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [clientData, setClientData] = useState({
@@ -130,11 +131,13 @@ const PublicBooking = () => {
         currentTime.setMinutes(currentTime.getMinutes() + serviceDuration);
       }
 
+      const dateString = selectedDate?.toISOString().split('T')[0];
+      
       const { data: existingAppointments } = await supabase
         .from("appointments")
         .select("appointment_time")
         .eq("professional_id", selectedProfessional.id)
-        .eq("appointment_date", selectedDate)
+        .eq("appointment_date", dateString)
         .eq("status", "scheduled");
 
       const bookedTimes = existingAppointments?.map(apt => apt.appointment_time) || [];
@@ -159,7 +162,7 @@ const PublicBooking = () => {
           professional_id: selectedProfessional?.id,
           client_name: clientData.name,
           client_phone: clientData.phone,
-          appointment_date: selectedDate,
+          appointment_date: selectedDate?.toISOString().split('T')[0],
           appointment_time: selectedTime,
         }]);
 
@@ -170,7 +173,7 @@ const PublicBooking = () => {
         description: "Seu agendamento foi realizado com sucesso.",
       });
 
-      setCurrentStep(7);
+      setCurrentStep(6);
     } catch (error) {
       console.error("Error creating appointment:", error);
       toast({
@@ -190,7 +193,7 @@ const PublicBooking = () => {
       clientName: clientData.name,
       serviceName: selectedService.name,
       professionalName: selectedProfessional.name,
-      date: selectedDate,
+      date: selectedDate?.toISOString().split('T')[0] || "",
       time: selectedTime,
       barbershopName: selectedBarbershop.barbershop_name,
       address: selectedBarbershop.address,
@@ -207,7 +210,7 @@ const PublicBooking = () => {
     setSelectedBarbershop(null);
     setSelectedService(null);
     setSelectedProfessional(null);
-    setSelectedDate("");
+    setSelectedDate(undefined);
     setSelectedTime("");
     setClientData({ name: "", phone: "" });
   };
@@ -316,73 +319,31 @@ const PublicBooking = () => {
           </Card>
         )}
 
-        {/* Step 4: Select Date */}
+        {/* Step 4: Calendar and Time Selection */}
         {currentStep === 4 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Escolha a Data</CardTitle>
-              <CardDescription>
-                Profissional: {selectedProfessional?.name}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Input
-                type="date"
-                min={getMinDate()}
-                value={selectedDate}
-                onChange={(e) => {
-                  setSelectedDate(e.target.value);
-                  setCurrentStep(5);
-                }}
-                className="w-full"
-              />
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <CalendarBooking
+              availableTimes={availableTimes}
+              selectedDate={selectedDate}
+              selectedTime={selectedTime}
+              onDateSelect={(date) => setSelectedDate(date)}
+              onTimeSelect={(time) => {
+                setSelectedTime(time);
+                setCurrentStep(5);
+              }}
+              professionalName={selectedProfessional?.name}
+              serviceDuration={selectedService?.duration_minutes}
+            />
+          </div>
         )}
 
-        {/* Step 5: Select Time */}
+        {/* Step 5: Client Information */}
         {currentStep === 5 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Escolha o Horário</CardTitle>
-              <CardDescription>
-                Data: {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {availableTimes.length === 0 ? (
-                <p className="text-muted-foreground text-center py-4">
-                  Nenhum horário disponível para esta data
-                </p>
-              ) : (
-                <div className="grid grid-cols-3 gap-2">
-                  {availableTimes.map((time) => (
-                    <Button
-                      key={time}
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedTime(time);
-                        setCurrentStep(6);
-                      }}
-                      className="h-12"
-                    >
-                      <Clock className="h-4 w-4 mr-2" />
-                      {time}
-                    </Button>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 6: Client Information */}
-        {currentStep === 6 && (
           <Card>
             <CardHeader>
               <CardTitle>Seus Dados</CardTitle>
               <CardDescription>
-                {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')} às {selectedTime}
+                {selectedDate?.toLocaleDateString('pt-BR')} às {selectedTime}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -413,7 +374,7 @@ const PublicBooking = () => {
                   <p><strong>Barbearia:</strong> {selectedBarbershop?.barbershop_name}</p>
                   <p><strong>Serviço:</strong> {selectedService?.name}</p>
                   <p><strong>Profissional:</strong> {selectedProfessional?.name}</p>
-                  <p><strong>Data:</strong> {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p>
+                  <p><strong>Data:</strong> {selectedDate?.toLocaleDateString('pt-BR')}</p>
                   <p><strong>Horário:</strong> {selectedTime}</p>
                   <p><strong>Valor:</strong> R$ {selectedService?.price.toFixed(2)}</p>
                 </div>
@@ -426,8 +387,8 @@ const PublicBooking = () => {
           </Card>
         )}
 
-        {/* Step 7: Confirmation */}
-        {currentStep === 7 && (
+        {/* Step 6: Confirmation */}
+        {currentStep === 6 && (
           <Card>
             <CardHeader className="text-center">
               <div className="mx-auto mb-4 w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
@@ -445,7 +406,7 @@ const PublicBooking = () => {
                 <p><strong>Cliente:</strong> {clientData.name}</p>
                 <p><strong>Serviço:</strong> {selectedService?.name}</p>
                 <p><strong>Profissional:</strong> {selectedProfessional?.name}</p>
-                <p><strong>Data:</strong> {new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}</p>
+                <p><strong>Data:</strong> {selectedDate?.toLocaleDateString('pt-BR')}</p>
                 <p><strong>Horário:</strong> {selectedTime}</p>
                 <p><strong>Valor:</strong> R$ {selectedService?.price.toFixed(2)}</p>
               </div>
