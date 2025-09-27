@@ -32,8 +32,8 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4 text-accent">Contato</h4>
             <ul className="space-y-2 text-sm">
-              <li className="text-primary-foreground/80">📱 (41) 99999-8888</li>
-              <li className="text-primary-foreground/80">✉️ contato@agendafacil.com</li>
+              <li className="text-primary-foreground/80">📱 (41) 98780-0003</li>
+              <li className="text-primary-foreground/80">✉️ tekorarech.cwb@gmail.com</li>
               <li className="text-primary-foreground/80">📍 Curitiba, PR</li>
               <li><a href="#support" className="text-primary-foreground/80 hover:text-accent transition-colors">Central de Ajuda</a></li>
             </ul>
