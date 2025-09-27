@@ -11,6 +11,7 @@ import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { WhatsAppSender } from "@/components/whatsapp/whatsapp-sender";
 import { generateConfirmationMessage } from "@/lib/whatsapp-utils";
 import { CalendarBooking } from "@/components/booking/calendar-booking";
+import { clientDataSchema, appointmentSchema } from "@/lib/validation-schemas";
 
 interface Service {
   id: string;
@@ -154,16 +155,32 @@ const PublicBooking = () => {
     setLoading(true);
 
     try {
+      // Validate client data
+      const validatedClientData = clientDataSchema.parse(clientData);
+      
+      // Validate appointment data
+      const appointmentData = {
+        clientName: validatedClientData.name,
+        clientPhone: validatedClientData.phone,
+        appointmentDate: selectedDate?.toISOString().split('T')[0] || "",
+        appointmentTime: selectedTime,
+        serviceId: selectedService?.id || "",
+        professionalId: selectedProfessional?.id || "",
+        userId: selectedBarbershop?.id || "",
+      };
+      
+      const validatedAppointment = appointmentSchema.parse(appointmentData);
+
       const { error } = await supabase
         .from("appointments")
         .insert([{
-          user_id: selectedBarbershop?.id,
-          service_id: selectedService?.id,
-          professional_id: selectedProfessional?.id,
-          client_name: clientData.name,
-          client_phone: clientData.phone,
-          appointment_date: selectedDate?.toISOString().split('T')[0],
-          appointment_time: selectedTime,
+          user_id: validatedAppointment.userId,
+          service_id: validatedAppointment.serviceId,
+          professional_id: validatedAppointment.professionalId,
+          client_name: validatedAppointment.clientName,
+          client_phone: validatedAppointment.clientPhone,
+          appointment_date: validatedAppointment.appointmentDate,
+          appointment_time: validatedAppointment.appointmentTime,
         }]);
 
       if (error) throw error;
@@ -174,13 +191,24 @@ const PublicBooking = () => {
       });
 
       setCurrentStep(6);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating appointment:", error);
-      toast({
-        title: "Erro",
-        description: "Erro ao criar agendamento",
-        variant: "destructive",
-      });
+      
+      // Handle validation errors
+      if (error.errors) {
+        const validationError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: validationError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Erro ao criar agendamento. Verifique os dados e tente novamente.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }

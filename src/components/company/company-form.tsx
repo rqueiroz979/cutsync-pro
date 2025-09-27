@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Building2, Phone, MapPin, Mail, MessageCircle } from "lucide-react";
+import { companyFormSchema } from "@/lib/validation-schemas";
 
 interface CompanyFormProps {
   userId: string;
@@ -58,16 +59,27 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
     setLoading(true);
 
     try {
+      // Validate form data
+      const validatedData = companyFormSchema.parse({
+        barbershopName: formData.barbershop_name,
+        fullName: formData.full_name,
+        phone: formData.phone,
+        whatsapp: formData.whatsapp,
+        address: formData.address,
+        email: formData.email,
+        description: formData.description,
+      });
+
       const { error } = await supabase
         .from("profiles")
         .update({
-          barbershop_name: formData.barbershop_name,
-          full_name: formData.full_name,
-          phone: formData.phone,
-          whatsapp: formData.whatsapp,
-          address: formData.address,
-          email: formData.email,
-          description: formData.description,
+          barbershop_name: validatedData.barbershopName,
+          full_name: validatedData.fullName,
+          phone: validatedData.phone,
+          whatsapp: validatedData.whatsapp,
+          address: validatedData.address,
+          email: validatedData.email,
+          description: validatedData.description,
         } as any)
         .eq("user_id", userId);
 
@@ -77,13 +89,21 @@ const CompanyForm = ({ userId }: CompanyFormProps) => {
         title: "Dados atualizados",
         description: "Os dados da empresa foram salvos com sucesso!",
       });
-    } catch (error) {
-      console.error("Error updating company data:", error);
-      toast({
-        title: "Erro",
-        description: "Erro ao salvar os dados da empresa.",
-        variant: "destructive",
-      });
+    } catch (error: any) {
+      if (error.errors) {
+        const validationError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: validationError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Erro ao salvar os dados da empresa.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }

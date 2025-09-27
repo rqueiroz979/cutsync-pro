@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, ArrowLeft } from "lucide-react";
+import { serviceSchema } from "@/lib/validation-schemas";
 
 interface Service {
   id: string;
@@ -70,10 +71,17 @@ const Services = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not authenticated");
 
-      const serviceData = {
-        name: formData.name,
+      // Validate form data
+      const validatedData = serviceSchema.parse({
+        name: formData.name.trim(),
         price: parseFloat(formData.price),
         duration_minutes: parseInt(formData.duration_minutes),
+      });
+
+      const serviceData = {
+        name: validatedData.name,
+        price: validatedData.price,
+        duration_minutes: validatedData.duration_minutes,
         user_id: user.id,
       };
 
@@ -98,13 +106,21 @@ const Services = () => {
       setEditingService(null);
       setFormData({ name: "", price: "", duration_minutes: "" });
       loadServices();
-    } catch (error) {
-      console.error("Error saving service:", error);
-      toast({
-        title: "Erro",
-        description: "Erro ao salvar serviço",
-        variant: "destructive",
-      });
+    } catch (error: any) {
+      if (error.errors) {
+        const validationError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: validationError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Erro ao salvar serviço",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }

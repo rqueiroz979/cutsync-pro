@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { whatsappMessageSchema } from "@/lib/validation-schemas";
 
 interface WhatsAppSenderProps {
   phoneNumber: string;
@@ -23,22 +24,19 @@ export const WhatsAppSender = ({
   const { toast } = useToast();
 
   const handleSend = async () => {
-    if (!phoneNumber || !message) {
-      toast({
-        title: "Erro",
-        description: "Número de telefone e mensagem são obrigatórios",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
+      // Validate input data
+      const validatedData = whatsappMessageSchema.parse({
+        phoneNumber: phoneNumber.replace(/\D/g, ''), // Remove non-digits for validation
+        message,
+      });
+
       const { data, error } = await supabase.functions.invoke('send-whatsapp', {
         body: { 
-          to: phoneNumber, 
-          message 
+          to: validatedData.phoneNumber, 
+          message: validatedData.message
         }
       });
 
@@ -49,12 +47,20 @@ export const WhatsAppSender = ({
         description: "A mensagem foi enviada para o WhatsApp com sucesso",
       });
     } catch (error: any) {
-      console.error("Error sending WhatsApp message:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível enviar a mensagem. Verifique o token da API.",
-        variant: "destructive",
-      });
+      if (error.errors) {
+        const validationError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: validationError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Não foi possível enviar a mensagem. Verifique os dados e tente novamente.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

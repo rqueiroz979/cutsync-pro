@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Scissors } from "lucide-react";
+import { signInSchema, signUpSchema } from "@/lib/validation-schemas";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -34,52 +35,97 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      // Validate input data
+      const validatedData = signInSchema.parse({ email, password });
 
-    if (error) {
-      toast({
-        title: "Erro no login",
-        description: error.message,
-        variant: "destructive",
+      const { error } = await supabase.auth.signInWithPassword({
+        email: validatedData.email,
+        password: validatedData.password,
       });
-    }
 
-    setLoading(false);
+      if (error) {
+        toast({
+          title: "Erro no login",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      if (error.errors) {
+        const validationError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: validationError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro no login",
+          description: "Verifique os dados e tente novamente.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: {
-          full_name: fullName,
-          barbershop_name: barbershopName,
+    try {
+      // Validate input data
+      const validatedData = signUpSchema.parse({
+        email,
+        password,
+        fullName,
+        barbershopName,
+      });
+
+      const { error } = await supabase.auth.signUp({
+        email: validatedData.email,
+        password: validatedData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            full_name: validatedData.fullName,
+            barbershop_name: validatedData.barbershopName,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
-      toast({
-        title: "Erro no cadastro",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Cadastro realizado!",
-        description: "Verifique seu email para confirmar a conta.",
-      });
+      if (error) {
+        toast({
+          title: "Erro no cadastro",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Cadastro realizado!",
+          description: "Verifique seu email para confirmar a conta.",
+        });
+      }
+    } catch (error: any) {
+      if (error.errors) {
+        const validationError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: validationError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro no cadastro",
+          description: "Verifique os dados e tente novamente.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {

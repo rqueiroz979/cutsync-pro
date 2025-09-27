@@ -10,6 +10,16 @@ interface WhatsAppRequest {
   message: string;
 }
 
+// Input validation functions
+function validatePhoneNumber(phone: string): boolean {
+  const cleaned = phone.replace(/\D/g, '');
+  return cleaned.length >= 10 && cleaned.length <= 15;
+}
+
+function validateMessage(message: string): boolean {
+  return message.length > 0 && message.length <= 1000;
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -26,9 +36,30 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { to, message }: WhatsAppRequest = await req.json();
     
+    // Validate required fields
     if (!to || !message) {
       return new Response(JSON.stringify({ 
         error: 'Missing required fields: to and message' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validate phone number format
+    if (!validatePhoneNumber(to)) {
+      return new Response(JSON.stringify({ 
+        error: 'Invalid phone number format. Must be 10-15 digits.' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validate message length
+    if (!validateMessage(message)) {
+      return new Response(JSON.stringify({ 
+        error: 'Message must be between 1 and 1000 characters' 
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
