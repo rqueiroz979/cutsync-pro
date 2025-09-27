@@ -219,7 +219,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      validate_appointment_slot: {
+        Args: {
+          p_appointment_date: string
+          p_appointment_id?: string
+          p_appointment_time: string
+          p_duration_minutes: number
+          p_professional_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
