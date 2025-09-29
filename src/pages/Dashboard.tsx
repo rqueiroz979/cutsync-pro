@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Calendar, DollarSign, Users, Clock, LogOut, Scissors, Building2, BarChart3 } from "lucide-react";
 import { ShareBookingLink } from "@/components/booking/share-booking-link";
 import CompanyForm from "@/components/company/company-form";
+import { UsageOverview } from "@/components/dashboard/usage-overview";
 
 interface DashboardStats {
   todayRevenue: number;
@@ -132,6 +133,11 @@ const Dashboard = () => {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
+            {/* Usage Overview */}
+            {user && (
+              <UsageOverview userId={user.id} />
+            )}
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

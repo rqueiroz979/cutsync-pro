@@ -34,7 +34,7 @@ export function HeroSection() {
                 size="lg" 
                 className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                🎯 Teste Grátis por 30 Dias
+                🎯 10 Agendamentos Grátis
               </Button>
               <Button 
                 size="lg" 

@@ -28,7 +28,7 @@ export function CTASection() {
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
               onClick={() => window.location.href = "/auth"}
             >
-              🎯 Começar Teste Grátis Agora
+              🎯 Começar com 10 Agendamentos Grátis
             </Button>
             <Button 
               size="lg" 
@@ -43,11 +43,11 @@ export function CTASection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-4 border border-primary-foreground/20 hover:border-primary-foreground/30 transition-all duration-300">
             <div className="text-3xl font-bold mb-2">✅</div>
-            <div className="text-sm font-medium opacity-90">30 dias grátis</div>
+            <div className="text-sm font-medium opacity-90">10 agendamentos grátis</div>
           </div>
           <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-4 border border-primary-foreground/20 hover:border-primary-foreground/30 transition-all duration-300">
             <div className="text-3xl font-bold mb-2">🚀</div>
-            <div className="text-sm font-medium opacity-90">Setup em 10 min</div>
+            <div className="text-sm font-medium opacity-90">Setup em 5 min</div>
           </div>
           <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-4 border border-primary-foreground/20 hover:border-primary-foreground/30 transition-all duration-300">
             <div className="text-3xl font-bold mb-2">💪</div>

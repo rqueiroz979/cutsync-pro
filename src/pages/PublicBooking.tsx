@@ -12,6 +12,8 @@ import { WhatsAppSender } from "@/components/whatsapp/whatsapp-sender";
 import { generateConfirmationMessage } from "@/lib/whatsapp-utils";
 import { CalendarBooking } from "@/components/booking/calendar-booking";
 import { clientDataSchema, appointmentSchema } from "@/lib/validation-schemas";
+import { useAppointmentLimit } from "@/hooks/use-appointment-limit";
+import { AppointmentLimitWarning } from "@/components/ui/appointment-limit-warning";
 
 interface Service {
   id: string;
@@ -51,6 +53,7 @@ const PublicBooking = () => {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { limit: appointmentLimit, loading: limitLoading } = useAppointmentLimit(selectedBarbershop?.id || null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -155,6 +158,16 @@ const PublicBooking = () => {
     setLoading(true);
 
     try {
+      // Check appointment limit before creating
+      if (!appointmentLimit?.can_create_appointment) {
+        toast({
+          variant: "destructive",
+          title: "Limite atingido",
+          description: "Limite de agendamentos gratuitos atingido. O proprietário da barbearia precisa assinar um plano para aceitar novos agendamentos.",
+        });
+        return;
+      }
+
       // Validate client data
       const validatedClientData = clientDataSchema.parse(clientData);
       
@@ -256,6 +269,16 @@ const PublicBooking = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
+        {/* Appointment Limit Warning */}
+        {selectedBarbershop && appointmentLimit && (
+          <div className="mb-6">
+            <AppointmentLimitWarning
+              appointmentsUsed={appointmentLimit.appointments_used}
+              maxFreeAppointments={10}
+              onUpgrade={() => window.open('/pricing', '_blank')}
+            />
+          </div>
+        )}
         {/* Step 1: Select Barbershop */}
         {currentStep === 1 && (
           <Card>

@@ -63,10 +63,10 @@ export function PricingSection() {
             Planos que <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Cabem no seu Bolso</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
-            Escolha o plano ideal para sua barbearia. Todos incluem teste grátis de 30 dias e suporte completo.
+            Escolha o plano ideal para sua barbearia. Comece com 10 agendamentos gratuitos, depois assine para continuar.
           </p>
           <div className="inline-flex items-center bg-gradient-to-r from-accent/10 to-accent/5 border border-accent/30 rounded-full px-6 py-3 shadow-lg">
-            <span className="text-accent font-semibold">🎉 Oferta de Lançamento: 50% OFF nos primeiros 3 meses</span>
+            <span className="text-accent font-semibold">🎉 Comece Grátis: 10 agendamentos sem custo!</span>
           </div>
         </div>
 
