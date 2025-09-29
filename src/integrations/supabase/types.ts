@@ -214,11 +214,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_appointment_limits: {
+        Row: {
+          appointments_used: number
+          created_at: string
+          has_active_subscription: boolean
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          appointments_used?: number
+          created_at?: string
+          has_active_subscription?: boolean
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          appointments_used?: number
+          created_at?: string
+          has_active_subscription?: boolean
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      check_appointment_limit: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
       validate_appointment_slot: {
         Args: {
           p_appointment_date: string
