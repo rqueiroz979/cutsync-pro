@@ -11,9 +11,9 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="flex-shrink-0">
+          <div className="flex-shrink-0">
               <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                AgendaFácil
+                CutSync Pro
               </span>
             </div>
           </div>

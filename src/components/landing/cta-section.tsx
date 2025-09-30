@@ -19,7 +19,7 @@ export function CTASection() {
           </h2>
           
           <p className="text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed">
-            Junte-se a mais de 50 barbearias em Curitiba que já transformaram seus negócios e aumentaram o faturamento
+            Junte-se a mais de 50 barbearias em todo o Brasil que já transformaram seus negócios e aumentaram o faturamento
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">

@@ -26,13 +26,14 @@ export function HeroSection() {
             </h1>
             
             <p className="text-xl md:text-2xl text-primary-foreground/90 mb-10 leading-relaxed max-w-3xl mx-auto">
-              Sistema completo de agendamento e gestão financeira especialmente desenvolvido para barbearias de Curitiba e região.
+              Sistema completo de agendamento e gestão financeira especialmente desenvolvido para barbearias de todo o Brasil.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Button 
                 size="lg" 
                 className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                onClick={() => window.location.href = "/auth"}
               >
                 🎯 10 Agendamentos Grátis
               </Button>
@@ -40,6 +41,7 @@ export function HeroSection() {
                 size="lg" 
                 variant="outline" 
                 className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50 px-10 py-5 text-lg rounded-xl backdrop-blur-sm transition-all duration-300"
+                onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}
               >
                 📹 Ver Demonstração
               </Button>

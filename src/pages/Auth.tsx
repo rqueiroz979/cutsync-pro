@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Scissors } from "lucide-react";
 import { signInSchema, signUpSchema } from "@/lib/validation-schemas";
+import { PasswordStrengthIndicator } from "@/components/auth/password-strength-indicator";
+import { EmailValidator } from "@/components/auth/email-validator";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +20,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [showResetForm, setShowResetForm] = useState(false);
+  const [showEmailValidation, setShowEmailValidation] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -36,7 +39,6 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      // Validate input data
       const validatedData = signInSchema.parse({ email, password });
 
       const { error } = await supabase.auth.signInWithPassword({
@@ -45,24 +47,43 @@ const Auth = () => {
       });
 
       if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast({
+            title: "❌ Erro no login",
+            description: "E-mail ou senha incorretos. Verifique seus dados e tente novamente, ou use a opção 'Esqueceu a senha?' caso necessário.",
+            variant: "destructive",
+          });
+        } else if (error.message.includes("Email not confirmed")) {
+          toast({
+            title: "⚠️ E-mail não confirmado",
+            description: "Por favor, verifique seu e-mail e clique no link de confirmação antes de fazer login.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "❌ Erro no login",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
+      } else {
         toast({
-          title: "Erro no login",
-          description: error.message,
-          variant: "destructive",
+          title: "✅ Login realizado com sucesso!",
+          description: "Bem-vindo ao CutSync Pro. Redirecionando...",
         });
       }
     } catch (error: any) {
       if (error.errors) {
         const validationError = error.errors[0];
         toast({
-          title: "Erro de validação",
+          title: "⚠️ Dados inválidos",
           description: validationError.message,
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Erro no login",
-          description: "Verifique os dados e tente novamente.",
+          title: "❌ Erro no login",
+          description: "Ocorreu um erro inesperado. Por favor, tente novamente.",
           variant: "destructive",
         });
       }
@@ -76,7 +97,6 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      // Validate input data
       const validatedData = signUpSchema.parse({
         email,
         password,
@@ -97,29 +117,48 @@ const Auth = () => {
       });
 
       if (error) {
-        toast({
-          title: "Erro no cadastro",
-          description: error.message,
-          variant: "destructive",
-        });
+        if (error.message.includes("User already registered")) {
+          toast({
+            title: "⚠️ Usuário já cadastrado",
+            description: "Este e-mail já está registrado. Faça login ou recupere sua senha.",
+            variant: "destructive",
+          });
+        } else if (error.message.includes("Password should be at least")) {
+          toast({
+            title: "⚠️ Senha fraca",
+            description: "A senha deve atender aos requisitos mínimos de segurança.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "❌ Erro no cadastro",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
-          title: "Cadastro realizado!",
-          description: "Verifique seu email para confirmar a conta.",
+          title: "✅ Cadastro realizado com sucesso!",
+          description: "Verifique seu e-mail para confirmar sua conta e começar a usar o CutSync Pro.",
         });
+        // Clear form
+        setEmail("");
+        setPassword("");
+        setFullName("");
+        setBarbershopName("");
       }
     } catch (error: any) {
       if (error.errors) {
         const validationError = error.errors[0];
         toast({
-          title: "Erro de validação",
+          title: "⚠️ Dados inválidos",
           description: validationError.message,
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Erro no cadastro",
-          description: "Verifique os dados e tente novamente.",
+          title: "❌ Erro no cadastro",
+          description: "Ocorreu um erro inesperado. Por favor, tente novamente.",
           variant: "destructive",
         });
       }
@@ -138,14 +177,14 @@ const Auth = () => {
 
     if (error) {
       toast({
-        title: "Erro na recuperação",
+        title: "❌ Erro na recuperação",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Email enviado!",
-        description: "Verifique seu email para redefinir a senha.",
+        title: "✅ E-mail enviado com sucesso!",
+        description: "Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.",
       });
       setShowResetForm(false);
       setResetEmail("");
@@ -161,7 +200,7 @@ const Auth = () => {
           <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
             <Scissors className="h-6 w-6 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">AgendaFácil</CardTitle>
+          <CardTitle className="text-2xl">CutSync Pro</CardTitle>
           <CardDescription>
             Sistema de agendamento para barbearias
           </CardDescription>
@@ -180,9 +219,14 @@ const Auth = () => {
                     id="email"
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setShowEmailValidation(true);
+                    }}
+                    onBlur={() => setShowEmailValidation(true)}
                     required
                   />
+                  <EmailValidator email={email} showValidation={showEmailValidation} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Senha</Label>
@@ -265,9 +309,14 @@ const Auth = () => {
                     id="signupEmail"
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setShowEmailValidation(true);
+                    }}
+                    onBlur={() => setShowEmailValidation(true)}
                     required
                   />
+                  <EmailValidator email={email} showValidation={showEmailValidation} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signupPassword">Senha</Label>
@@ -278,6 +327,7 @@ const Auth = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  <PasswordStrengthIndicator password={password} />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Cadastrando..." : "Cadastrar"}
