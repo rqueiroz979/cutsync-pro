@@ -15,7 +15,7 @@ export function CTASection() {
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-            Pronto para <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Digitalizar</span> sua Barbearia?
+            Comece a Transformar sua Barbearia <span className="block">com o AgendaFácil</span>
           </h2>
           
           <p className="text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed">

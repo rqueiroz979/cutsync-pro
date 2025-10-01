@@ -22,7 +22,7 @@ export function HeroSection() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-8 leading-tight">
-              Transforme sua <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Barbearia</span> em um Negócio Digital
+              Transforme sua Barbearia com o <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">AgendaFácil</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-primary-foreground/90 mb-10 leading-relaxed max-w-3xl mx-auto">

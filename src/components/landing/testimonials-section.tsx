@@ -9,7 +9,7 @@ export function TestimonialsSection() {
       barbershop: "Barbearia Premium - São Paulo, SP",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Carlos",
       rating: 5,
-      text: "Desde que implementamos o CutSync Pro, nossos agendamentos aumentaram 40%. O sistema é intuitivo e meus clientes adoram poder agendar pelo celular a qualquer hora."
+      text: "Desde que implementamos o AgendaFácil, nossos agendamentos aumentaram 40%. O sistema é intuitivo e meus clientes adoram poder agendar pelo celular a qualquer hora."
     },
     {
       name: "Roberto Ferreira",
@@ -41,7 +41,7 @@ export function TestimonialsSection() {
       barbershop: "Barbearia Moderna - Porto Alegre, RS",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felipe",
       rating: 5,
-      text: "Com 3 unidades, precisava de algo profissional e escalável. O CutSync Pro atendeu perfeitamente. Gerencio tudo de forma centralizada e tenho controle total do faturamento."
+      text: "Com 3 unidades, precisava de algo profissional e escalável. O AgendaFácil atendeu perfeitamente. Gerencio tudo de forma centralizada e tenho controle total do faturamento."
     },
     {
       name: "Lucas Mendes",
@@ -64,7 +64,7 @@ export function TestimonialsSection() {
             O que dizem nossos <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Clientes</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Barbearias de todo o Brasil já transformaram seus negócios com o CutSync Pro
+            Barbearias de todo o Brasil já transformaram seus negócios com o AgendaFácil
           </p>
         </div>
 

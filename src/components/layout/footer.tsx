@@ -6,14 +6,14 @@ export function Footer() {
           {/* Logo e Descrição */}
           <div className="col-span-1 md:col-span-2">
             <div className="mb-4">
-              <span className="text-2xl font-bold text-accent">CutSync Pro</span>
+              <span className="text-2xl font-bold text-accent">AgendaFácil</span>
             </div>
             <p className="text-primary-foreground/80 mb-4 max-w-md">
               Sistema completo de agendamento e gestão para barbearias. 
               Desenvolvido especialmente para barbearias de todo o Brasil.
             </p>
             <div className="text-sm text-primary-foreground/60">
-              © 2024 CutSync Pro. Todos os direitos reservados.
+              © 2024 AgendaFácil. Todos os direitos reservados.
             </div>
           </div>
 

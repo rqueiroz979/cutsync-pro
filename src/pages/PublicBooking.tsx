@@ -215,10 +215,22 @@ const PublicBooking = () => {
           description: validationError.message,
           variant: "destructive",
         });
+      } else if (error.code === '23505') {
+        toast({
+          title: "Horário Indisponível",
+          description: "Este horário acabou de ser reservado. Por favor, escolha outro horário.",
+          variant: "destructive",
+        });
+      } else if (error.message?.includes('slot')) {
+        toast({
+          title: "Horário Indisponível",
+          description: "O horário selecionado não está mais disponível. Por favor, escolha outro horário.",
+          variant: "destructive",
+        });
       } else {
         toast({
-          title: "Erro",
-          description: "Erro ao criar agendamento. Verifique os dados e tente novamente.",
+          title: "Erro ao Agendar",
+          description: "Não foi possível completar o agendamento. Por favor, tente novamente.",
           variant: "destructive",
         });
       }
@@ -323,7 +335,7 @@ const PublicBooking = () => {
                 <Button
                   key={service.id}
                   variant="outline"
-                  className="w-full justify-between h-auto p-4"
+                  className="w-full justify-between h-auto p-4 transition-all hover:border-accent hover:shadow-md"
                   onClick={() => {
                     setSelectedService(service);
                     setCurrentStep(3);
@@ -348,7 +360,9 @@ const PublicBooking = () => {
             <CardHeader>
               <CardTitle>Escolha o Profissional</CardTitle>
               <CardDescription>
-                Serviço: {selectedService?.name}
+                <div className="mt-2 p-2 bg-accent/10 rounded-md inline-block">
+                  <span className="text-sm">📋 Serviço: <strong>{selectedService?.name}</strong> - {selectedService?.duration_minutes}min - R$ {selectedService?.price.toFixed(2)}</span>
+                </div>
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -356,7 +370,7 @@ const PublicBooking = () => {
                 <Button
                   key={professional.id}
                   variant="outline"
-                  className="w-full justify-start h-auto p-4"
+                  className="w-full justify-start h-auto p-4 transition-all hover:border-accent hover:shadow-md"
                   onClick={() => {
                     setSelectedProfessional(professional);
                     setCurrentStep(4);
@@ -373,6 +387,23 @@ const PublicBooking = () => {
         {/* Step 4: Calendar and Time Selection */}
         {currentStep === 4 && (
           <div className="space-y-6">
+            {selectedService && (
+              <Card className="bg-accent/5 border-accent/20">
+                <CardContent className="pt-4 pb-4">
+                  <p className="text-sm text-muted-foreground">Resumo da seleção</p>
+                  <div className="flex items-center justify-between mt-1">
+                    <div>
+                      <p className="font-medium">{selectedService.name}</p>
+                      <p className="text-sm text-muted-foreground">com {selectedProfessional?.name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-muted-foreground">{selectedService.duration_minutes} min</p>
+                      <p className="font-bold text-accent">R$ {selectedService.price.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             <CalendarBooking
               availableTimes={availableTimes}
               selectedDate={selectedDate}

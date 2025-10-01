@@ -13,7 +13,7 @@ export function Navbar() {
           <div className="flex items-center">
           <div className="flex-shrink-0">
               <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                CutSync Pro
+                AgendaFácil
               </span>
             </div>
           </div>

@@ -58,7 +58,7 @@ export function FeaturesSection() {
             <span className="text-accent font-medium text-sm">✨ Funcionalidades Completas</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-            Tudo que sua Barbearia <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Precisa</span>
+            Funcionalidades <span className="bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent">Completas</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Sistema completo que simplifica sua gestão, automatiza processos e melhora a experiência dos seus clientes
