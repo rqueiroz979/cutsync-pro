@@ -32,16 +32,15 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Button 
                 size="lg" 
-                className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
                 onClick={() => window.location.href = "/auth"}
               >
                 🎯 10 Agendamentos Grátis
               </Button>
               <Button 
                 size="lg" 
-                variant="outline" 
-                className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50 px-10 py-5 text-lg rounded-xl backdrop-blur-sm transition-all duration-300"
-                onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}
+                className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 border-2 border-primary-foreground"
+                onClick={() => window.open('https://www.youtube.com/watch?v=9KHLTZaJcR8&list=PLbVHz4urQBZkJiAWdG8HWoJTdgEysigIO', '_blank')}
               >
                 📹 Ver Demonstração
               </Button>

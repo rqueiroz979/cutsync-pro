@@ -25,15 +25,15 @@ export function CTASection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button 
               size="lg" 
-              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
               onClick={() => window.location.href = "/auth"}
             >
               🎯 Começar com 10 Agendamentos Grátis
             </Button>
             <Button 
               size="lg" 
-              variant="outline" 
-              className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50 px-10 py-5 text-lg rounded-xl backdrop-blur-sm transition-all duration-300"
+              className="bg-success hover:bg-success/90 text-success-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 border-2 border-success"
+              onClick={() => window.open('https://wa.me/5541987800003?text=Olá! Gostaria de conhecer mais sobre o AgendaFácil.', '_blank')}
             >
               💬 Falar com Especialista
             </Button>
