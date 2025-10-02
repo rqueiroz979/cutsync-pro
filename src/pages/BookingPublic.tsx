@@ -40,6 +40,7 @@ const BookingPublic = () => {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [barbershopName, setBarbershopName] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,7 +57,18 @@ const BookingPublic = () => {
 
   const loadBarbershopData = async () => {
     try {
-      // Load services and professionals for this barbershop
+      // Load barbershop info
+      const { data: barbershopData } = await supabase
+        .from("profiles")
+        .select("barbershop_name")
+        .eq("user_id", barbershopId)
+        .single();
+      
+      if (barbershopData) {
+        setBarbershopName(barbershopData.barbershop_name);
+      }
+
+      // Load services and professionals for this barbershop - NO AUTH REQUIRED
       const { data: servicesData } = await supabase
         .from("services")
         .select("*")
@@ -219,8 +231,10 @@ const BookingPublic = () => {
           <div className="mx-auto mb-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center">
             <Scissors className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">AgendaFácil</h1>
-          <p className="text-muted-foreground">Agende seu horário</p>
+          <h1 className="text-3xl font-bold text-foreground">
+            {barbershopName || "AgendaFácil"}
+          </h1>
+          <p className="text-muted-foreground">Agende seu horário online</p>
         </div>
       </header>
 
