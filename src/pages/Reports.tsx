@@ -94,12 +94,12 @@ const Reports = () => {
       }
 
       // Apply professional filter
-      if (filters.professionalId) {
+      if (filters.professionalId && filters.professionalId !== "all") {
         query = query.eq("appointments.professional_id", filters.professionalId);
       }
 
       // Apply payment method filter
-      if (filters.paymentMethod) {
+      if (filters.paymentMethod && filters.paymentMethod !== "all") {
         query = query.eq("payment_method", filters.paymentMethod);
       }
 
@@ -239,7 +239,7 @@ const Reports = () => {
                     <SelectValue placeholder="Todos os profissionais" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os profissionais</SelectItem>
+                    <SelectItem value="all">Todos os profissionais</SelectItem>
                     {professionals.map((professional) => (
                       <SelectItem key={professional.id} value={professional.id}>
                         {professional.name}
@@ -259,7 +259,7 @@ const Reports = () => {
                     <SelectValue placeholder="Todas as formas" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas as formas</SelectItem>
+                    <SelectItem value="all">Todas as formas</SelectItem>
                     <SelectItem value="dinheiro">Dinheiro</SelectItem>
                     <SelectItem value="cartao">Cartão</SelectItem>
                     <SelectItem value="pix">PIX</SelectItem>
