@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { BarChart3, DollarSign, Calendar, User } from "lucide-react";
+import { BarChart3, DollarSign, Calendar, User, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Professional {
   id: string;
@@ -32,6 +33,7 @@ const Reports = () => {
     paymentMethod: "",
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -192,6 +194,14 @@ const Reports = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <div className="container mx-auto px-4 py-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate("/dashboard")}
+            className="mb-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Voltar
+          </Button>
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
             <BarChart3 className="h-8 w-8" />
             Relatório Financeiro
