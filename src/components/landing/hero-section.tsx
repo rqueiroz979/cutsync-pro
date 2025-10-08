@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { DemoModal } from "./demo-modal";
 import heroImage from "@/assets/hero-barbershop.jpg";
 
 export function HeroSection() {
+  const [showDemo, setShowDemo] = useState(false);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <>
+      <DemoModal open={showDemo} onOpenChange={setShowDemo} />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -40,7 +46,7 @@ export function HeroSection() {
               <Button 
                 size="lg" 
                 className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 border-2 border-primary-foreground"
-                onClick={() => window.open('https://www.youtube.com/watch?v=9KHLTZaJcR8&list=PLbVHz4urQBZkJiAWdG8HWoJTdgEysigIO', '_blank')}
+                onClick={() => setShowDemo(true)}
               >
                 📹 Ver Demonstração
               </Button>
@@ -68,7 +74,8 @@ export function HeroSection() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }
