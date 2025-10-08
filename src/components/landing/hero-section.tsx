@@ -1,15 +1,9 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { DemoModal } from "./demo-modal";
 import heroImage from "@/assets/hero-barbershop.jpg";
 
 export function HeroSection() {
-  const [showDemo, setShowDemo] = useState(false);
-
   return (
-    <>
-      <DemoModal open={showDemo} onOpenChange={setShowDemo} />
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -43,13 +37,6 @@ export function HeroSection() {
               >
                 🎯 10 Agendamentos Grátis
               </Button>
-              <Button 
-                size="lg" 
-                className="bg-primary-foreground hover:bg-primary-foreground/90 text-primary font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 border-2 border-primary-foreground"
-                onClick={() => setShowDemo(true)}
-              >
-                📹 Ver Demonstração
-              </Button>
             </div>
           </div>
 
@@ -76,6 +63,5 @@ export function HeroSection() {
         </div>
         </div>
       </section>
-    </>
   );
 }
