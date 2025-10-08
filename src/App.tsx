@@ -14,6 +14,8 @@ import Reports from "./pages/Reports";
 import BookingPublic from "./pages/BookingPublic";
 import PublicBooking from "./pages/PublicBooking";
 import Pricing from "./pages/Pricing";
+import Features from "./pages/Features";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +29,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/cadastro" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/services" element={<Services />} />
           <Route path="/professionals" element={<Professionals />} />
@@ -34,6 +38,9 @@ const App = () => (
           <Route path="/payments" element={<Payments />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/precos" element={<Pricing />} />
+          <Route path="/funcionalidades" element={<Features />} />
+          <Route path="/contato" element={<Contact />} />
           <Route path="/book/:barbershopId" element={<BookingPublic />} />
           <Route path="/agendamento" element={<PublicBooking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

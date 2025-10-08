@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-barbershop.jpg";
 
 export function HeroSection() {
@@ -33,9 +34,9 @@ export function HeroSection() {
               <Button 
                 size="lg" 
                 className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-10 py-5 text-lg rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
-                onClick={() => window.location.href = "/auth"}
+                asChild
               >
-                🎯 10 Agendamentos Grátis
+                <Link to="/cadastro">🎯 10 Agendamentos Grátis</Link>
               </Button>
             </div>
           </div>
